@@ -1,0 +1,3 @@
+# Reflection
+
+Anti-pattern team tôi dễ vướng nhất là xem data lake như một bãi dump file: ghi thẳng raw events vào một thư mục chung, không có medallion contract, dedup, schema enforcement, hay audit trail rõ ràng. Với dữ liệu LLM observability, lỗi này rất dễ xảy ra vì log request đến liên tục, có retry trùng `request_id`, schema payload thay đổi theo model/provider, và nhóm thường muốn ingest nhanh trước rồi xử lý sau. Lab này cho thấy nếu không tách Bronze/Silver/Gold, metric như p95 latency, cost_usd, error_rate sẽ bị lệch do duplicate và malformed JSON. Delta Lake giúp giảm rủi ro bằng transaction log, schema evolution có kiểm soát, time travel/restore, và Gold table có định nghĩa metric ổn định cho dashboard.
